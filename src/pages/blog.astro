@@ -1,0 +1,36 @@
+---
+import { Debug } from 'astro/components';
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import BlogCard from '../components/BlogCard.jsx'
+import { SITE_TITLE, SITE_DESCRIPTION } from '../config';
+
+const response = await fetch('http://localhost:1337/api/posts?populate=deep').then(res => res.json())
+const posts = response.data
+---
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<style>
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section>
+
+        {
+          posts.map(({attributes: {title, excerpt, readingTime, publishedAt, slug, author, featuredImg}}) => (
+          <BlogCard featuredImg={`http://localhost:1337${featuredImg.data.attributes.formats.small.url}?resize=200x200`}
+          title={title} excerpt={excerpt}
+          slug={slug}/>
+          ))
+        }
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>
